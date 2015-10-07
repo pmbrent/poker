@@ -8,6 +8,11 @@ describe Hand do
   let(:card3) { double(:card3) }
   let(:card4) { double(:card4) }
   let(:card5) { double(:card5) }
+  let(:card6) { double(:card6) }
+  let(:card7) { double(:card7) }
+  let(:card8) { double(:card8) }
+  let(:card9) { double(:card9) }
+  let(:card10) { double(:card10) }
 
   describe "#draw" do
 
@@ -28,60 +33,75 @@ describe Hand do
 
   end
 
-  describe "#matches" do
-
-    # it "detects all cards with matching values" do
-    #
-    #   allow(card1).to receive(:value).and_return(5)
-    #   allow(card2).to receive(:value).and_return(3)
-    #   allow(card3).to receive(:value).and_return(3)
-    #   allow(card4).to receive(:value).and_return(5)
-    #   allow(card5).to receive(:value).and_return(:q)
-    #   hand.fivecards = [card1, card2, card3, card4, card5]
-    #
-    #   expect(hand.matches).to include(card1, card4, card2, card3)
-    #   expect(hand.matches.count).to eq(4)
-    #
-    # end
-
-  end
-
   describe "#pair" do
-    # before do
-    #   allow(card1).to receive(:value).and_return(5)
-    #   allow(card2).to receive(:value).and_return(3)
-    #   allow(card4).to receive(:value).and_return(4)
-    #   allow(card5).to receive(:value).and_return(:q)
-    # end
-    #
-    # it "detects a pair" do
-    #   allow(card3).to receive(:value).and_return(3)
-    #   hand.fivecards = [card1, card2, card3, card4, card5]
-    #
-    #   hand.pair
-    #   expect(hand.type).to eq(:pair)
-    # end
-    #
-    # it "returns nil if no pair" do
-    #   allow(card3).to receive(:value).and_return(6)
-    #   hand.fivecards = [card1, card2, card3, card4, card5]
-    #
-    #   expect(hand.pair).to eq(nil)
-    # end
+    before do
+      allow(card1).to receive(:value).and_return(5)
+      allow(card2).to receive(:value).and_return(3)
+      allow(card4).to receive(:value).and_return(4)
+      allow(card5).to receive(:value).and_return(:q)
+    end
+
+    it "detects a pair" do
+      allow(card3).to receive(:value).and_return(3)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.pair?).to eq(true)
+    end
+
+    it "returns nil if no pair" do
+      allow(card3).to receive(:value).and_return(6)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.pair?).to eq(false)
+    end
 
   end
 
   describe "#two_pairs" do
+    before do
+      allow(card1).to receive(:value).and_return(9)
+      allow(card2).to receive(:value).and_return(9)
+      allow(card3).to receive(:value).and_return(8)
+      allow(card4).to receive(:value).and_return(:q)
+    end
 
-    it "detects two pairs"
-    it "does not run if there are no pairs"
+    it "detects two pairs" do
+      allow(card5).to receive(:value).and_return(:q)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.two_pairs?).to be(true)
+    end
+
+    it "returns false if there aren't two pairs" do
+      allow(card5).to receive(:value).and_return(:k)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.two_pairs?).to be(false)
+    end
 
   end
 
   describe "#triple" do
+    before do
+      allow(card1).to receive(:value).and_return(9)
+      allow(card2).to receive(:value).and_return(9)
+      allow(card3).to receive(:value).and_return(8)
+      allow(card4).to receive(:value).and_return(:q)
+    end
 
-    it "detects three of a kind"
-    it "returns nil if no pair"
+    it "detects three of a kind" do
+      allow(card5).to receive(:value).and_return(9)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.triple?).to be(true)
+    end
+
+    it "returns false if no pair" do
+      allow(card5).to receive(:value).and_return(6)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.triple?).to be(false)
+    end
 
   end
 
@@ -97,7 +117,7 @@ describe Hand do
       allow(card5).to receive(:value).and_return(:j)
       hand.fivecards = [card1, card2, card3, card4, card5]
 
-      expect(hand.straight).to be(true)
+      expect(hand.straight?).to be(true)
     end
 
 
@@ -105,7 +125,7 @@ describe Hand do
       allow(card5).to receive(:value).and_return(2)
       hand.fivecards = [card1, card2, card3, card4, card5]
 
-      expect(hand.straight).to be(false)
+      expect(hand.straight?).to be(false)
     end
 
   end
@@ -123,29 +143,63 @@ describe Hand do
       allow(card5).to receive(:suit).and_return(:d)
       hand.fivecards = [card1, card2, card3, card4, card5]
 
-      expect(hand.flush).to be(true)
+      expect(hand.flush?).to be(true)
     end
 
     it "returns nil if no flush" do
       allow(card5).to receive(:suit).and_return(:s)
       hand.fivecards = [card1, card2, card3, card4, card5]
 
-      expect(hand.flush).to be(false)
+      expect(hand.flush?).to be(false)
     end
 
   end
 
   describe "#house" do
+    before do
+      allow(card1).to receive(:value).and_return(9)
+      allow(card2).to receive(:value).and_return(9)
+      allow(card3).to receive(:value).and_return(9)
+      allow(card4).to receive(:value).and_return(:q)
+    end
 
-    it "detects a house"
-    it "returns nil if no house"
+    it "detects a house" do
+      allow(card5).to receive(:value).and_return(:q)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.house?).to be(true)
+    end
+
+    it "returns nil if no house" do
+      allow(card5).to receive(:value).and_return(:k)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.house?).to be(false)
+    end
 
   end
 
   describe "#bomb" do
+    before do
+      allow(card1).to receive(:value).and_return(9)
+      allow(card2).to receive(:value).and_return(9)
+      allow(card3).to receive(:value).and_return(9)
+      allow(card4).to receive(:value).and_return(:q)
 
-    it "detects a bomb"
-    it "returns nil if no bomb"
+    end
+    it "detects a bomb" do
+      allow(card5).to receive(:value).and_return(9)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.bomb?).to be(true)
+
+    end
+    it "returns nil if no bomb" do
+      allow(card5).to receive(:value).and_return(8)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      expect(hand.bomb?).to be(false)
+    end
 
   end
 
@@ -164,13 +218,13 @@ describe Hand do
       allow(card5).to receive(:suit).and_return(:d)
       hand.fivecards = [card1, card2, card3, card4, card5]
 
-      expect(hand.straight_flush).to be(true)
+      expect(hand.straight_flush?).to be(true)
     end
 
     it "returns false if no straight flush" do
       hand.draw
       hand.fivecards[0] = hand.fivecards[1]
-      expect(hand.straight_flush).to be(false)
+      expect(hand.straight_flush?).to be(false)
     end
   end
 
@@ -189,21 +243,50 @@ describe Hand do
       allow(card5).to receive(:suit).and_return(:d)
       hand.fivecards = [card1, card2, card3, card4, card5]
 
-      expect(hand.royal_flush).to be(true)
+      expect(hand.royal_flush?).to be(true)
     end
 
     it "returns false if no royal flush" do
       hand.draw
       hand.fivecards[0] = hand.fivecards[1]
-      expect(hand.royal_flush).to be(false)
+      expect(hand.royal_flush?).to be(false)
     end
 
 
   end
 
   describe "#beats" do
+    let(:hand2) { Hand.new }
 
-    it "correctly compares a bomb and a pair"
+    it "correctly compares a bomb and a pair" do
+      allow(card1).to receive(:value).and_return(9)
+      allow(card2).to receive(:value).and_return(9)
+      allow(card3).to receive(:value).and_return(9)
+      allow(card4).to receive(:value).and_return(:q)
+      allow(card5).to receive(:value).and_return(9)
+      allow(card1).to receive(:suit).and_return(:s)
+      allow(card2).to receive(:suit).and_return(:d)
+      allow(card3).to receive(:suit).and_return(:d)
+      allow(card4).to receive(:suit).and_return(:c)
+      allow(card5).to receive(:suit).and_return(:d)
+      hand.fivecards = [card1, card2, card3, card4, card5]
+
+      allow(card6).to receive(:value).and_return(5)
+      allow(card7).to receive(:value).and_return(5)
+      allow(card8).to receive(:value).and_return(2)
+      allow(card9).to receive(:value).and_return(:q)
+      allow(card10).to receive(:value).and_return(7)
+      allow(card6).to receive(:suit).and_return(:s)
+      allow(card7).to receive(:suit).and_return(:d)
+      allow(card8).to receive(:suit).and_return(:h)
+      allow(card9).to receive(:suit).and_return(:d)
+      allow(card10).to receive(:suit).and_return(:d)
+
+      hand2.fivecards = [card6, card7, card8, card9, card10]
+
+      expect(hand.beats(hand2)).to be(true)
+    end
+
     it "correctly compares two bombs"
     it "correctly compares two straights"
     it "correctly compares two flushes"
